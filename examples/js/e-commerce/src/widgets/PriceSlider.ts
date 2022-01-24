@@ -9,14 +9,13 @@ const priceRangeSlider = panel({
   collapsed: () => false,
 })(rangeSlider);
 
-export const priceSlider = (container = '[data-widget="price-range"]') =>
-  priceRangeSlider({
-    container,
-    attribute: 'price',
-    pips: false,
-    tooltips: {
-      format(value) {
-        return `${Math.round(value).toLocaleString()}`;
-      },
+export const priceSlider = priceRangeSlider({
+  container: '[data-widget="price-range"]',
+  attribute: 'price',
+  pips: false,
+  tooltips: {
+    format(value) {
+      return `${Math.round(value).toLocaleString()}`;
     },
-  });
+  },
+});

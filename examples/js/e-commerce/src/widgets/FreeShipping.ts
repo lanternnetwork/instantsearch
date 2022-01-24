@@ -9,11 +9,10 @@ const freeShippingToggleRefinement = panel({
   collapsed: () => false,
 })(toggleRefinement);
 
-export const freeShipping = (container = '[data-widget="free-shipping"]') =>
-  freeShippingToggleRefinement({
-    container,
-    attribute: 'free_shipping',
-    templates: {
-      labelText: 'Display only items with free shipping',
-    },
-  });
+export const freeShipping = freeShippingToggleRefinement({
+  container: '[data-widget="free-shipping"]',
+  attribute: 'free_shipping',
+  templates: {
+    labelText: 'Display only items with free shipping',
+  },
+});

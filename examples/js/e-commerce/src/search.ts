@@ -18,7 +18,6 @@ import {
   searchBox,
   sortBy,
 } from './widgets';
-import { dynamicWidgets } from 'instantsearch.js/es/widgets';
 import getRouting from './routing';
 
 const searchClient = algoliasearch(
@@ -33,17 +32,18 @@ const search = instantsearch({
 });
 
 search.addWidgets([
+  brands,
+  categories,
   clearFilters,
   clearFiltersEmptyResults,
   clearFiltersMobile,
   configuration,
-  dynamicWidgets({
-    container: '[data-widget="filters"]',
-    widgets: [brands, categories, freeShipping, priceSlider, ratings],
-  }),
+  freeShipping,
   hitsPerPage,
   pagination,
+  priceSlider,
   products,
+  ratings,
   resultsNumberMobile,
   saveFiltersMobile,
   searchBox,
