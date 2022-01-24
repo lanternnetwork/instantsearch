@@ -9,11 +9,12 @@ const ratingsMenu = panel({
   collapsed: () => false,
 })(ratingMenu);
 
-export const ratings = ratingsMenu({
-  container: '[data-widget="ratings"]',
-  attribute: 'rating',
-  templates: {
-    item: `
+export const ratings = (container = '[data-widget="ratings"]') =>
+  ratingsMenu({
+    container,
+    attribute: 'rating',
+    templates: {
+      item: `
 {{#count}}
   <a class="{{cssClasses.link}}" aria-label="{{value}} & up" href="{{url}}">
 {{/count}}
@@ -39,8 +40,8 @@ export const ratings = ratingsMenu({
   </div>
 {{/count}}
   `,
-  },
-});
+    },
+  });
 
 export function getFallbackRatingsRoutingValue(
   value: string

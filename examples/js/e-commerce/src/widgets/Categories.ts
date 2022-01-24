@@ -9,7 +9,8 @@ const categoryHierarchicalMenu = panel({
   collapsed: () => false,
 })(hierarchicalMenu);
 
-export const categories = categoryHierarchicalMenu({
-  container: '[data-widget="categories"]',
-  attributes: ['hierarchicalCategories.lvl0', 'hierarchicalCategories.lvl1'],
-});
+export const categories = (container = '[data-widget="categories"]') =>
+  categoryHierarchicalMenu({
+    container,
+    attributes: ['hierarchicalCategories.lvl0', 'hierarchicalCategories.lvl1'],
+  });
