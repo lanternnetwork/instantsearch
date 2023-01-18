@@ -1,6 +1,6 @@
 import { Hit as AlgoliaHit } from 'instantsearch.js';
 import algoliasearch from 'algoliasearch/lite';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   InstantSearch,
   Breadcrumb,
@@ -32,10 +32,33 @@ import {
 import { Tab, Tabs } from './components/layout';
 
 import './App.css';
+import { override } from './override-method';
 
-const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76'
+let shouldThrowError = false;
+const searchClient = override(
+  algoliasearch('latency', '6be0576ff61c053d5f9a3225e2a90f76'),
+  'search',
+  async (search, ...args) => {
+    if (shouldThrowError) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      throw new Error('An error occurred!');
+    }
+    return search(...args).then((res) => {
+      return {
+        results: res.results.map((result) => {
+          return {
+            ...result,
+            hits: result.hits.map((hit) => {
+              return {
+                ...hit,
+                price: (hit as any).price + 1,
+              };
+            }),
+          };
+        }),
+      };
+    });
+  }
 );
 
 type HitProps = {
@@ -54,6 +77,20 @@ function Hit({ hit }: HitProps) {
   );
 }
 
+function ErrorMaker() {
+  const [error, setError] = React.useState(shouldThrowError);
+
+  useEffect(() => {
+    shouldThrowError = error;
+  }, [error]);
+
+  return (
+    <button type="button" onClick={() => setError(!error)}>
+      {error ? 'disable' : 'enable'} erroring
+    </button>
+  );
+}
+
 export function App() {
   return (
     <InstantSearch
@@ -63,6 +100,7 @@ export function App() {
     >
       <Configure ruleContexts={[]} />
 
+      <ErrorMaker />
       <div className="Container">
         <div>
           <DynamicWidgets>
