@@ -21,6 +21,7 @@ import {
   SearchBox,
   SortBy,
   ToggleRefinement,
+  useInstantSearch,
 } from 'react-instantsearch-hooks-web';
 
 import {
@@ -40,24 +41,13 @@ const searchClient = override(
   'search',
   async (search, ...args) => {
     if (shouldThrowError) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      throw new Error('An error occurred!');
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      throw new Error(
+        `An error occurred in query ${args[0][0].params!.query}!`
+      );
     }
-    return search(...args).then((res) => {
-      return {
-        results: res.results.map((result) => {
-          return {
-            ...result,
-            hits: result.hits.map((hit) => {
-              return {
-                ...hit,
-                price: (hit as any).price + 1,
-              };
-            }),
-          };
-        }),
-      };
-    });
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    return search(...args);
   }
 );
 
@@ -89,6 +79,27 @@ function ErrorMaker() {
       {error ? 'disable' : 'enable'} erroring
     </button>
   );
+}
+
+function ErrorToast() {
+  const { status, error } = useInstantSearch({ catchError: true });
+
+  if (error) {
+    return (
+      <div
+        style={{
+          background: 'salmon',
+          color: 'white',
+          padding: '1em',
+          fontWeight: 'bold',
+        }}
+      >
+        status: {status}, {error?.message}
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export function App() {
@@ -145,7 +156,8 @@ export function App() {
             ]}
           />
 
-          <SearchBox placeholder="Search" autoFocus />
+          <SearchBox placeholder="Search" />
+          <ErrorToast />
 
           <div className="Search-header">
             <PoweredBy />
