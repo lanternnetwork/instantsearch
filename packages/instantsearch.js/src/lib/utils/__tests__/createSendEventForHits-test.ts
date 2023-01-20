@@ -27,6 +27,7 @@ const createTestEnvironment = ({ nbHits = 2 }: { nbHits?: number } = {}) => {
   const bindEvent = createBindEventForHits({
     index,
     widgetType,
+    instantSearchInstance,
   });
   return {
     instantSearchInstance,
